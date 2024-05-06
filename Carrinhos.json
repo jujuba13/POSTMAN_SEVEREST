@@ -1,0 +1,656 @@
+{
+	"info": {
+		"_postman_id": "b06c06b0-8e07-4bca-9aa5-9eb8bbe817b6",
+		"name": "Carrinhos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30631997"
+	},
+	"item": [
+		{
+			"name": "Cadastrar_usuários",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function primeiro_Nome(){\r",
+							"  let  primeiro_Nome = [\"Juliana\", \"Alessa\", \"Renata\", \"Roberta\", \"Maria Cecília\", \"Arthur\", \"Mario Francisco\", \"Arlon\", \"Zayam\", \"Noah\", \"Lizye\", \"Kemilly\", \"Marlon\", \"Rosa Maria\", \"Asafe\", \"Ilax\"];\r",
+							"  let  randomItem = primeiro_Nome[Math.floor(Math.random() * primeiro_Nome.length)];\r",
+							"\r",
+							"  return  randomItem\r",
+							"}\r",
+							"\r",
+							"pm.environment.set(\"Primeiro_Nome\", primeiro_Nome())\r",
+							"\r",
+							"function sobrenome(){\r",
+							"    let sobrenome = [\"França\", \"Sousa\", \"Soares\", \"Siva\", \"Garcia\", \"Morais\", \"Maressa\", \"Lopez\", \"Campos\", \"Dias\", \"Gonçalves\", \"Alves\", \"Castro\", \"Caetano\", \"Santos\", \"Dantas\", \"Delcia\", \"Moreira\", \"Menezes\", \"Novais\"];\r",
+							"    let radomItem = sobrenome[Math.floor(Math.random() * sobrenome.length)]\r",
+							"\r",
+							"    return radomItem\r",
+							"}\r",
+							"pm.environment.set(\"Sobrenome\", sobrenome())\r",
+							"\r",
+							"pm.environment.set(\"Nome_Completo\", pm.environment.get(\"Primeiro_Nome\") + \"_\" + pm.environment.get(\"Sobrenome\"))\r",
+							"\r",
+							"function provedor(){\r",
+							"    let provedor = [\"@hotmail.com\", \"@gmail.com\", \"@outlook.com\", \"@uol.com\", \"@yahoo.com\"]\r",
+							"    let radomItem = provedor[Math.floor(Math.random() * provedor.length)]\r",
+							"    return radomItem\r",
+							"}\r",
+							"pm.environment.set(\"Provedor\", provedor())\r",
+							"pm.environment.set(\"Email\", pm.environment.get(\"Primeiro_Nome\") + \"_\" + pm.environment.get(\"Sobrenome\") + pm.environment.get(\"Provedor\"))\r",
+							"\r",
+							"function novoProvedor(){\r",
+							"for (let i = 0; i < 100; i++) {\r",
+							"    let novoProduto;\r",
+							"    do {\r",
+							"        novoProvedor = provedor();\r",
+							"    } while (provedor.includes(novoProvedor)); // Garante que não haja produtos duplicados\r",
+							"    provedor.push(novoProvedor);\r",
+							"}}\r",
+							"\r",
+							"console.log(provedor);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Mensagem cadastro usuário com sucesso\", function (){\r",
+							" pm.expect(pm.globals.get(\"Message\")).to.eq(pm.response.json().message)\r",
+							"})\r",
+							"\r",
+							"console.log(pm.globals.get(\"Message\"))\r",
+							"console.log(pm.response.json())\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validar Id\", function(){\r",
+							"    pm.expect(pm.response.json()._id).to.contain.toString()\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"{{Nome_Completo}}\",\r\n  \"email\": \"{{Email}}\",\r\n  \"password\": \"123teste\",\r\n  \"administrador\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/usuarios",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Mensagem cadastro usuário com sucesso\", function (){\r",
+							" pm.expect(pm.globals.get(\"Message_Login\")).to.eq(pm.response.json().message)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validar token\", function(){\r",
+							"    pm.expect(pm.response.json().authorization).to.contain.toString()\r",
+							"})\r",
+							"\r",
+							"pm.environment.set(\"Token_login\", pm.response.json().authorization)\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{token}}",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "query",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\t\r\n\r\n{\r\n  \"email\": \"{{Email}}\",\r\n  \"password\": \"123teste\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cadastrar_Produtos",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function nome_produto(){\r",
+							"    let nome_produto =  [\"iPhone 13\",\"Samsung Galaxy S21\",\"MacBook Pro\", \"Sony PlayStation 5\", \"Microsoft Xbox Series X\",\"Bose QuietComfort 45\",\"Canon EOS R5\", \"DJI Mavic Air 2\", \"Nintendo Switch\", \"Google Pixel 6\", \"GoPro Hero 10\", \"LG OLED C1\", \"Nike Air Zoom Pegasus 38\", \"Adidas Ultraboost 21\",\r",
+							"    \"Lululemon Align Leggings\", \"Instant Pot Duo Evo Plus\", \"Fitbit Charge 5\",\"Amazon Echo Show 10\",\r",
+							"    \"Sony WH-1000XM4\",\"Fujifilm X-T4\",\"Super\", \"Mega\", \"Ultra\", \"Pro\", \"Max\", \"Elite\", \"Prime\", \"Premium\", \"Tech\", \"Gamer\", \"Sport\", \"Xtreme\", \"Master\", \"Plus\", \"Turbo\", \"Dynamic\", \"Nova\", \"Global\", \"Infinity\"]\r",
+							"    let randomItem = nome_produto[Math.floor(Math.random() * nome_produto.length)]\r",
+							"    return randomItem\r",
+							"}\r",
+							"\r",
+							"function novoProduto(){\r",
+							"for (let i = 0; i < 100; i++) {\r",
+							"    let novoProduto;\r",
+							"    do {\r",
+							"        novoProduto = nome_produto();\r",
+							"    } while (nome_produto.includes(novoProduto)); // Garante que não haja produtos duplicados\r",
+							"    nome_produto.push(novoProduto);\r",
+							"}}\r",
+							"\r",
+							"console.log(nome_produto);\r",
+							"\r",
+							"pm.environment.set(\"Nome_Produto\", nome_produto())\r",
+							"\r",
+							"function preco(){\r",
+							"    let preco = [\"120\",\"280\", \"150\",\"350\",\"420\",\"520\", \"200\", \"380\", \"220\", \"450\",\"210\"]\r",
+							"    let randomItem = preco[Math.floor(Math.random() * preco.length)]\r",
+							"    return randomItem\r",
+							"}\r",
+							"pm.environment.set(\"Preco\", preco())\r",
+							"\r",
+							"function quantidade(){\r",
+							"    let quantidade = [\"5\", \"20\", \"10\", \"50\", \"200\", \"100\", \"15\", \"25\", \"35\", \"30\"]\r",
+							"    let randomItem = quantidade[Math.floor(Math.random() * quantidade.length)]\r",
+							"    return randomItem\r",
+							"}\r",
+							"pm.environment.set(\"Quantidade_Produto\", quantidade())\r",
+							"\r",
+							"function descricao(){\r",
+							"    let descricao = [\"Último modelo de smartphone da Apple.\",\r",
+							"    \"Um dos principais smartphones Android da Samsung.\",\r",
+							"    \"Potente laptop da Apple para profissionais.\",\r",
+							"    \"Console de videogame de última geração da Sony.\",\r",
+							"    \"Console de videogame de última geração da Microsoft.\",\r",
+							"    \"Fones de ouvido com cancelamento de ruído da Bose.\",\r",
+							"    \"Câmera mirrorless profissional da Canon.\",\r",
+							"    \"Drone compacto e poderoso da DJI.\",\r",
+							"    \"Console de videogame híbrido da Nintendo.\",\r",
+							"    \"Novo smartphone Android da Google.\",\r",
+							"    \"Câmera de ação topo de linha da GoPro.\",\r",
+							"    \"Televisor OLED de alta qualidade da LG.\",\r",
+							"    \"Tênis de corrida popular da Nike.\",\r",
+							"    \"Tênis de corrida popular da Adidas.\",\r",
+							"    \"Calça legging confortável e estilosa da Lululemon.\",\r",
+							"    \"Panela de pressão elétrica multifuncional.\",\r",
+							"    \"Rastreador de atividades físicas avançado da Fitbit.\",\r",
+							"    \"Assistente de voz inteligente com tela da Amazon.\",\r",
+							"    \"Fones de ouvido com cancelamento de ruído da Sony.\",\r",
+							"    \"Câmera mirrorless versátil da Fujifilm.\"]\r",
+							"    let randomItem = descricao[Math.floor(Math.random() * descricao.length)]\r",
+							"    return randomItem\r",
+							"}\r",
+							"pm.environment.set(\"Descricao\", descricao())"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Mensagem cadastro de produto com sucesso\", function (){\r",
+							" pm.expect(pm.globals.get(\"Message\")).to.eq(pm.response.json().message)\r",
+							"})\r",
+							"\r",
+							" let idproduto = pm.response.json()._id\r",
+							" pm.globals.set(\"idProduto\", idproduto)\r",
+							"\r",
+							"pm.test(\"Validar ID do produto\", function(){\r",
+							"    pm.expect(pm.globals.get(\"idProduto\")).to.eq(JSON.parse(responseBody)._id)\r",
+							"})\r",
+							"\r",
+							"\r",
+							"console.log(pm.globals.get(\"Message\"))\r",
+							"console.log(pm.response.json())\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{Token_login}}",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"{{Nome_Produto}}\",\r\n  \"preco\": {{Preco}},\r\n  \"descricao\": \"{{Descricao}}\",\r\n  \"quantidade\": {{Quantidade_Produto}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/produtos",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"produtos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar_Todos_Produtos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{Token_login}}",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/produtos",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"produtos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cadastrar_Carrinhos",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function quantidade(){\r",
+							"    let quantidade = [\"5\", \"20\", \"10\", \"50\", \"200\", \"100\", \"15\", \"25\", \"35\", \"30\"]\r",
+							"    let randomItem = quantidade[Math.floor(Math.random() * quantidade.length)]\r",
+							"    return randomItem\r",
+							"}\r",
+							"pm.environment.set(\"Quantidade_Produto\", quantidade())\r",
+							" \r",
+							"function nome_produto(){\r",
+							"  let nome_produto = [\r",
+							"    \"iPhone 13\",\r",
+							"    \"Samsung Galaxy S21\",\r",
+							"    \"MacBook Pro\",\r",
+							"    \"Sony PlayStation 5\",\r",
+							"    \"Microsoft Xbox Series X\",\r",
+							"    \"Bose QuietComfort 45\",\r",
+							"    \"Canon EOS R5\",\r",
+							"    \"DJI Mavic Air 2\",\r",
+							"    \"Nintendo Switch\",\r",
+							"    \"Google Pixel 6\",\r",
+							"    \"GoPro Hero 10\",\r",
+							"    \"LG OLED C1\",\r",
+							"    \"Nike Air Zoom Pegasus 38\",\r",
+							"    \"Adidas Ultraboost 21\",\r",
+							"    \"Lululemon Align Leggings\",\r",
+							"    \"Instant Pot Duo Evo Plus\",\r",
+							"    \"Fitbit Charge 5\",\r",
+							"    \"Amazon Echo Show 10\",\r",
+							"    \"Sony WH-1000XM4\",\r",
+							"    \"Fujifilm X-T4\"\r",
+							"];\r",
+							"\r",
+							"    let randomItem = nome_produto[Math.floor(Math.random() * nome_produto.length)]\r",
+							"    return randomItem\r",
+							"}\r",
+							"\r",
+							"\r",
+							"function preco(){\r",
+							"    let preco = [\"120\",\"280\", \"150\",\"350\",\"420\",\"520\", \"200\", \"380\", \"220\", \"450\",\"210\"]\r",
+							"    let randomItem = preco[Math.floor(Math.random() * preco.length)]\r",
+							"    return randomItem\r",
+							"}\r",
+							"\r",
+							"function quantidade(){\r",
+							"    let quantidade = [\"5\", \"20\", \"10\", \"50\", \"200\", \"100\", \"15\", \"25\", \"35\", \"30\"]\r",
+							"    let randomItem = quantidade[Math.floor(Math.random() * quantidade.length)]\r",
+							"    return randomItem\r",
+							"}\r",
+							"\r",
+							"function descricao(){\r",
+							"    let descricao = [\r",
+							"    \"Último modelo de smartphone da Apple.\",\r",
+							"    \"Um dos principais smartphones Android da Samsung.\",\r",
+							"    \"Potente laptop da Apple para profissionais.\",\r",
+							"    \"Console de videogame de última geração da Sony.\",\r",
+							"    \"Console de videogame de última geração da Microsoft.\",\r",
+							"    \"Fones de ouvido com cancelamento de ruído da Bose.\",\r",
+							"    \"Câmera mirrorless profissional da Canon.\",\r",
+							"    \"Drone compacto e poderoso da DJI.\",\r",
+							"    \"Console de videogame híbrido da Nintendo.\",\r",
+							"    \"Novo smartphone Android da Google.\",\r",
+							"    \"Câmera de ação topo de linha da GoPro.\",\r",
+							"    \"Televisor OLED de alta qualidade da LG.\",\r",
+							"    \"Tênis de corrida popular da Nike.\",\r",
+							"    \"Tênis de corrida popular da Adidas.\",\r",
+							"    \"Calça legging confortável e estilosa da Lululemon.\",\r",
+							"    \"Panela de pressão elétrica multifuncional.\",\r",
+							"    \"Rastreador de atividades físicas avançado da Fitbit.\",\r",
+							"    \"Assistente de voz inteligente com tela da Amazon.\",\r",
+							"    \"Fones de ouvido com cancelamento de ruído da Sony.\",\r",
+							"    \"Câmera mirrorless versátil da Fujifilm.\"\r",
+							"];\r",
+							"\r",
+							"    let randomItem = descricao[Math.floor(Math.random() * descricao.length)]\r",
+							"    return randomItem\r",
+							"}  \r",
+							"/*Produto 01 */\r",
+							"\r",
+							"pm.environment.set(\"Nome_Produto\", nome_produto())\r",
+							" pm.environment.set(\"Descricao\", descricao())\r",
+							" pm.environment.set(\"Preco\", preco())\r",
+							"pm.environment.set(\"Quantidade_Produto\", quantidade())\r",
+							"\r",
+							"/*Produto 02 */\r",
+							"\r",
+							"pm.environment.set(\"Nome_Produto_02\", nome_produto())\r",
+							" pm.environment.set(\"Descricao_02\", descricao())\r",
+							" pm.environment.set(\"Preco_02\", preco())\r",
+							"pm.environment.set(\"Quantidade_Produto_02\", quantidade())\r",
+							"\r",
+							"var Token_Login = pm.environment.get('Token_login')\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    url: 'https://serverest.dev/produtos',\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"    'Content-Type': 'application/json',\r",
+							"    'Authorization': Token_Login\r",
+							"    },\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            \"nome\": pm.environment.get('Nome_Produto'),\r",
+							"            \"preco\": pm.environment.get('Preco'),\r",
+							"            \"descricao\": pm.environment.get('Descricao'),\r",
+							"            \"quantidade\": pm.environment.get('Quantidade_Produto')\r",
+							"        })\r",
+							"    }\r",
+							"}, function(err, response) {\r",
+							"    // Handle response here if needed\r",
+							"              if (!err) {        \r",
+							"                console.log('Produto Cadastrado com sucesso');\r",
+							"                pm.environment.get(\"idProduto\", response.json()._id);\r",
+							"\r",
+							"}\r",
+							"});\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    url: 'https://serverest.dev/produtos',\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"    'Content-Type': 'application/json',\r",
+							"    'Authorization': Token_Login\r",
+							"    },\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            \"nome\": pm.environment.get('Nome_Produto_02'),\r",
+							"            \"preco\": pm.environment.get('Preco_02'),\r",
+							"            \"descricao\": pm.environment.get('Descricao_02'),\r",
+							"            \"quantidade\": pm.environment.get('Quantidade_Produto_02')\r",
+							"        })\r",
+							"    }\r",
+							"}, function(err, response) {\r",
+							"    // Handle response here if needed\r",
+							"              if (!err) {        \r",
+							"                console.log('Produto Cadastrado com sucesso');\r",
+							"                pm.environment.get(\"idProduto\", response.json()._id);\r",
+							"\r",
+							"}\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Mensagem cadastro usuário com sucesso\", function (){\r",
+							" pm.expect(pm.globals.get(\"Message\")).to.eq(pm.response.json().message)\r",
+							"})\r",
+							"\r",
+							"console.log(pm.globals.get(\"Message\"))\r",
+							"console.log(pm.response.json())\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{Token_login}}",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"produtos\": [\r\n        {\r\n            \"idProduto\": \"{{idProduto}}\",\r\n            \"quantidade\": 3\r\n        }\r\n      \r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/carrinhos",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"carrinhos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Concluir_Compras",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "{{Token_login}}",
+							"type": "string"
+						},
+						{
+							"key": "in",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/carrinhos/concluir-compra",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"carrinhos",
+						"concluir-compra"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

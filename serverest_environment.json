@@ -1,0 +1,129 @@
+{
+	"id": "51b53e1d-1cde-4341-be33-f3d31e95c672",
+	"name": "serverest",
+	"values": [
+		{
+			"key": "url",
+			"value": "https://serverest.dev",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "Primeiro_Nome",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Sobrenome",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Nome_Completo",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Provedor",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Email",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Registro_ID",
+			"value": "0uxuPY0cbmQhpEz1",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "Preco",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Quantidade_Produto",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Descricao",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Token_login",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Nome_Produto",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "ID_Produto",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Nome_Produto_02",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Descricao_02",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Preco_2",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Quantidade_Produto_02",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "Preco_02",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "idProduto_2",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "ID_RegistroProdutos",
+			"value": "nJfQkZjTPpvlnPfW",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2024-05-06T12:48:26.707Z",
+	"_postman_exported_using": "Postman/10.24.24"
+}

@@ -1,0 +1,146 @@
+{
+	"info": {
+		"_postman_id": "1717cb80-6d7e-4cfe-9d2d-9986b107b05f",
+		"name": "Login",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30631997"
+	},
+	"item": [
+		{
+			"name": "Cadastrar_usuários",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"function primeiro_Nome(){\r",
+							"  let  primeiro_Nome = [\"Juliana\", \"Alessa\", \"Renata\", \"Roberta\", \"Maria Cecília\", \"Arthur\", \"Mario Francisco\", \"Arlon\", \"Zayam\", \"Noah\", \"Lizye\", \"Kemilly\", \"Marlon\", \"Rosa Maria\", \"Asafe\", \"Ilax\"];\r",
+							"  let  randomItem = primeiro_Nome[Math.floor(Math.random() * primeiro_Nome.length)];\r",
+							"\r",
+							"  return  randomItem\r",
+							"}\r",
+							"\r",
+							"pm.environment.set(\"Primeiro_Nome\", primeiro_Nome())\r",
+							"\r",
+							"function sobrenome(){\r",
+							"    let sobrenome = [\"França\", \"Sousa\", \"Soares\", \"Siva\", \"Garcia\", \"Morais\", \"Maressa\", \"Lopez\", \"Campos\", \"Dias\", \"Gonçalves\", \"Alves\", \"Castro\", \"Caetano\", \"Santos\", \"Dantas\", \"Delcia\", \"Moreira\", \"Menezes\", \"Novais\"];\r",
+							"    let radomItem = sobrenome[Math.floor(Math.random() * sobrenome.length)]\r",
+							"\r",
+							"    return radomItem\r",
+							"}\r",
+							"pm.environment.set(\"Sobrenome\", sobrenome())\r",
+							"\r",
+							"pm.environment.set(\"Nome_Completo\", pm.environment.get(\"Primeiro_Nome\") + \"_\" + pm.environment.get(\"Sobrenome\"))\r",
+							"\r",
+							"function provedor(){\r",
+							"    let provedor = [\"@hotmail.com\", \"@gmail.com\", \"@outlook.com\", \"@uol.com\", \"@yahoo.com\"]\r",
+							"    let radomItem = provedor[Math.floor(Math.random() * provedor.length)]\r",
+							"    return radomItem\r",
+							"}\r",
+							"pm.environment.set(\"Provedor\", provedor())\r",
+							"pm.environment.set(\"Email\", pm.environment.get(\"Primeiro_Nome\") + \"_\" + pm.environment.get(\"Sobrenome\") + pm.environment.get(\"Provedor\"))"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Mensagem cadastro usuário com sucesso\", function (){\r",
+							" pm.expect(pm.globals.get(\"Message\")).to.eq(pm.response.json().message)\r",
+							"})\r",
+							"\r",
+							"console.log(pm.globals.get(\"Message\"))\r",
+							"console.log(pm.response.json())\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validar Id\", function(){\r",
+							"    pm.expect(pm.response.json()._id).to.contain.toString()\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"{{Nome_Completo}}\",\r\n  \"email\": \"{{Email}}\",\r\n  \"password\": \"123teste\",\r\n  \"administrador\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/usuarios",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Mensagem cadastro usuário com sucesso\", function (){\r",
+							" pm.expect(pm.globals.get(\"Message_Login\")).to.eq(pm.response.json().message)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Validar Id\", function(){\r",
+							"    pm.expect(pm.response.json().authorization).to.contain.toString()\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\t\r\n\r\n{\r\n  \"email\": \"{{Email}}\",\r\n  \"password\": \"123teste\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
