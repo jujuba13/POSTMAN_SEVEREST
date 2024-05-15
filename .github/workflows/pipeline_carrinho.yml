@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     needs:
-      - test
+      - build
     permissions:
       contents: read
       pages: write
